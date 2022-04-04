@@ -7,10 +7,13 @@ use PleskX\Api\Struct\Reseller as Struct;
 
 class Reseller extends \PleskX\Api\Operator
 {
-    public function create(array $properties): Struct\Info
+    public function create(array $properties, string $planName): Struct\Info
     {
         $packet = $this->client->getPacket();
-        $info = $packet->addChild($this->wrapperTag)->addChild('add')->addChild('gen-info');
+        $add = $packet->addChild($this->wrapperTag)->addChild('add');
+        $info = $add->addChild('gen-info');
+
+        $add->{'plan-name'} = $planName;
 
         foreach ($properties as $name => $value) {
             $info->{$name} = $value;
