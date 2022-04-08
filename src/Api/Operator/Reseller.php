@@ -82,7 +82,7 @@ class Reseller extends \PleskX\Api\Operator
         $packet = $this->client->getPacket();
         $setTag = $packet->addChild($this->wrapperTag)->addChild('set');
         $setTag->addChild('filter')->addChild($field, (string) $value);
-        $genInfoTag = $setTag->addChild('values')->addChild('gen_info');
+        $genInfoTag = $setTag->addChild('values')->addChild('gen-info');
         foreach ($properties as $property => $propertyValue) {
             $genInfoTag->addChild($property, (string) $propertyValue);
         }
