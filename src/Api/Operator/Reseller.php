@@ -52,6 +52,50 @@ class Reseller extends \PleskX\Api\Operator
      * @param string $field
      * @param int|string $value
      *
+     * @return bool
+     */
+    public function enable(string $field, $value): bool
+    {
+        return $this->setProperties($field, $value, ['status' => 0]);
+    }
+
+    /**
+     * @param string $field
+     * @param int|string $value
+     *
+     * @return bool
+     */
+    public function disable(string $field, $value): bool
+    {
+        return $this->setProperties($field, $value, ['status' => 1]);
+    }
+
+    /**
+     * @param string $field
+     * @param int|string $value
+     * @param array $properties
+     *
+     * @return bool
+     */
+    public function setProperties(string $field, $value, array $properties): bool
+    {
+        $packet = $this->client->getPacket();
+        $setTag = $packet->addChild($this->wrapperTag)->addChild('set');
+        $setTag->addChild('filter')->addChild($field, (string) $value);
+        $genInfoTag = $setTag->addChild('values')->addChild('gen-info');
+        foreach ($properties as $property => $propertyValue) {
+            $genInfoTag->addChild($property, (string) $propertyValue);
+        }
+
+        $response = $this->client->request($packet);
+
+        return 'ok' === (string) $response->status;
+    }
+
+    /**
+     * @param string $field
+     * @param int|string $value
+     *
      * @return Struct\GeneralInfo[]
      */
     public function getAll($field = null, $value = null): array
